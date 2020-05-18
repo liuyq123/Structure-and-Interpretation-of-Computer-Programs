@@ -58,6 +58,11 @@ def eval_all(expressions, env):
     """Evaluate each expression in the Scheme list EXPRESSIONS in
     environment ENV and return the value of the last."""
     # BEGIN PROBLEM 8
+    if expressions == nil:
+        return None
+    while expressions.second != nil:
+        scheme_eval(expressions.first, env)
+        expressions = expressions.second
     return scheme_eval(expressions.first, env)
     # END PROBLEM 8
 
@@ -111,6 +116,14 @@ class Frame(object):
         """
         # BEGIN PROBLEM 11
         "*** YOUR CODE HERE ***"
+        child_frame = Frame(self)
+        if len(formals) != len(vals):
+            raise SchemeError("The number of formals and vals should be equal!")
+        while len(formals) != 0:
+            child_frame.define(formals.first, vals.first)
+            formals = formals.second
+            vals = vals.second
+        return child_frame
         # END PROBLEM 11
 
 ##############
@@ -176,6 +189,7 @@ class LambdaProcedure(Procedure):
         of values, for a lexically-scoped call evaluated in environment ENV."""
         # BEGIN PROBLEM 12
         "*** YOUR CODE HERE ***"
+        return self.env.make_child_frame(self.formals, args)
         # END PROBLEM 12
 
     def __str__(self):
@@ -223,6 +237,8 @@ def do_define_form(expressions, env):
     elif isinstance(target, Pair) and scheme_symbolp(target.first):
         # BEGIN PROBLEM 10
         "*** YOUR CODE HERE ***"
+        env.bindings[target.first] = LambdaProcedure(target.second, expressions.second, env)
+        return target.first
         # END PROBLEM 10
     else:
         bad_target = target.first if isinstance(target, Pair) else target
@@ -248,6 +264,7 @@ def do_lambda_form(expressions, env):
     check_formals(formals)
     # BEGIN PROBLEM 9
     "*** YOUR CODE HERE ***"
+    return LambdaProcedure(formals, expressions.second, env)
     # END PROBLEM 9
 
 def do_if_form(expressions, env):
