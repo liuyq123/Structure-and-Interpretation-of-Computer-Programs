@@ -132,6 +132,13 @@ def scheme_read(src):
     elif val in quotes:
         # BEGIN PROBLEM 7
         "*** YOUR CODE HERE ***"
+        quoted = Pair(scheme_read(src), nil)
+        if val == "'":
+            return Pair('quote', quoted)
+        elif val == "`":
+            return Pair('quasiquote', quoted)
+        else:
+            return Pair('unquote', quoted)
         # END PROBLEM 7
     elif val not in DELIMITERS:
         return val
@@ -154,7 +161,7 @@ def read_tail(src):
             "*** YOUR CODE HERE ***"
             src.remove_front()
             return nil
-            # END PROBLEM 2
+            # END PROBLEM 2s
         else:
             # BEGIN PROBLEM 2
             "*** YOUR CODE HERE ***"
